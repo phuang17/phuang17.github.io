@@ -14,31 +14,85 @@
 </head>
 <body>
 	<div class="container">
-		<div class="row">
-			<div class="col-md-12 col-sm-12 text-left">
-				<h1>Po-Han Huang<small>'s Homepage</small></h1>
-				<hr>
-			</div>
+		<!-- Title -->
+		<div class="page-header">
+			<h1>Po-Han Huang<small>'s Homepage</small></h1>
 		</div>
 		<div class="row">
+			<!-- Profile -->
 			<div class="col-md-4 col-sm-12 text-center">
 				<img src="https://uofi.box.com/shared/static/e9y8dvfjwtiokdtotpqgbfftei7m48hc.png" alt="Po-Han Huang's profile image" id="profile_image"></img>
 			</div>
+			<!-- About Me -->
 			<div class="col-md-8 col-sm-12 text-left">
 				<h2 class="text-warning">About Me</h2>
 				<p class="indent">I am currently a Master of Science student in <a href="http://www.ece.illinois.edu/">the Electrical and Computer Engineering at University of Illinois at Urbana-Champaign</a>. My research interests include Computer Vision, Computational Photography, Machine Learning, and Virtual Reality.</p>
 				<p class="indent">I received the Bachelor of Science degree in the Electrical and Computer Engineering at University of Illinois at Urbana-Champaign in December, 2015. </p>
 				<p class="indent">I am working on my thesis research in collaboration with <a href="https://filebox.ece.vt.edu/~jbhuang/">Prof. Jia-Bin Huang</a> at Virginia Tech under the supervision of <a href="http://vision.ai.illinois.edu/ahuja.html">Prof. Narendra Ahuja</a>.</p>
-
 			</div>
+			<!-- hr -->
 			<div class="col-md-12 col-sm-12">
 				<hr>
 			</div>
 		</div>
-		<div class="row text-warning">
+		<div class="row">
+			<!-- Education -->
 			<div class="col-md-12 col-sm-12 text-left">
-				<!-- <h2>Education</h2> -->
-
+				<h2 class="text-warning">Education</h2>
+				<!-- UIUC -->
+				<div class="panel panel-warning">
+					<div class="panel-heading">University of Illinois at Urbana Champaign</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-8 col-sm-12 text-left">
+								<ul>
+									<li><b>Master of Science in Electrical Engineering</b></li>
+								</ul>	
+							</div>
+							<div class="col-md-4 col-sm-12 text-right">
+								<p>August 2016 – Present</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-8 col-sm-12 text-left">
+								<ul>
+									<li><b>Bachelor of Science in Electrical Engineering</b></li>
+									<ul>
+										<li>Dean’s List: Fall 2013, Spring &amp; Fall 2014, Spring &amp; Fall 2015</li>
+										<li>Recipient of <a href="https://www.ece.illinois.edu/academics/ugrad/scholarships-and-awards/scholarships/leung.asp"><i>Brian &amp; Sophie Leung Merit Scholarship</i></a> of year 2014 – 2015</li>
+										<li>Graduated with the <a href="http://images.library.uiuc.edu/projects/bronze/"><i>Bronze Tablet Honor</i></a> (for the top three percent of the students)</li>
+									</ul>
+								</ul>	
+							</div>
+							<div class="col-md-4 col-sm-12 text-right">
+								<p>August 2013 – December 2015<br>
+								Cumulative GPA: <b>3.98</b>/4.00</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- NTU -->
+				<div class="panel panel-warning">
+					<div class="panel-heading">National Taiwan University</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-8 col-sm-12 text-left">
+								<ul>
+									<li><b>Bachelor of Science in Electrical Engineering</b></li>
+									<ul>
+										<li>Presidential Award: Fall 2012</li>
+										<li>Transferred to University of Illinois at Urbana-Champaign in August 2013</li>
+									</ul>
+								</ul>	
+							</div>
+							<div class="col-md-4 col-sm-12 text-right">
+								<p>August 2012 – June 2013<br>
+								Cumulative GPA: <b>4.12</b>/4.30<br>
+								(3.93/4.00)</p>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -47,12 +101,16 @@
 body {
 	background-color: #fffcfa;
 	font-family: "Calibri", "Arial", sans-serif;
-	font-size: 20px;
-	letter-spacing: 1px;
+	font-size: 18px;
+	letter-spacing: 0.5px;
 }
 
 body > .container {
 	background-color: #fffaf5;
+}
+
+ul > ul {
+	margin-top: 10px;
 }
 
 #profile_image {
