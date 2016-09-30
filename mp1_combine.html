@@ -1,0 +1,654 @@
+<!DOCTYPE HTML> 
+<html lang="en"> 
+<head>
+<title>MP1 by phuang17</title>
+<meta charset="utf-8"> 
+</head>
+<body onload="startup();">
+  <canvas id="myGLCanvas" width="500" height="500"></canvas>
+  <script id="shader-vs" type="x-shader/x-vertex">
+  // No modification here
+  // Tested on Firefox 48 and Chrome 52
+   attribute vec3 aVertexPosition;
+   attribute vec4 aVertexColor;
+
+    uniform mat4 uMVMatrix;
+    varying vec4 vColor;
+
+    void main(void) {
+        gl_Position = uMVMatrix*vec4(aVertexPosition, 1.0);
+        vColor = aVertexColor;
+    }
+</script>
+  
+<script id="shader-fs" type="x-shader/x-fragment">
+precision mediump float;
+varying vec4 vColor;
+void main(void) {
+        gl_FragColor = vColor;
+ }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.3.2/gl-matrix-min.js"></script> 
+<!-- <script type="text/javascript" src="webgl-utils.js"></script> -->
+<script>
+/*
+ * Copyright 2010, Google Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Google Inc. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+/**
+ * @fileoverview This file contains functions every webgl program will need
+ * a version of one way or another.
+ *
+ * Instead of setting up a context manually it is recommended to
+ * use. This will check for success or failure. On failure it
+ * will attempt to present an approriate message to the user.
+ *
+ *       gl = WebGLUtils.setupWebGL(canvas);
+ *
+ * For animated WebGL apps use of setTimeout or setInterval are
+ * discouraged. It is recommended you structure your rendering
+ * loop like this.
+ *
+ *       function render() {
+ *         window.requestAnimFrame(render, canvas);
+ *
+ *         // do rendering
+ *         ...
+ *       }
+ *       render();
+ *
+ * This will call your rendering function up to the refresh rate
+ * of your display but will stop rendering if your app is not
+ * visible.
+ */
+
+WebGLUtils = function() {
+
+/**
+ * Creates the HTLM for a failure message
+ * @param {string} canvasContainerId id of container of th
+ *        canvas.
+ * @return {string} The html.
+ */
+var makeFailHTML = function(msg) {
+  return '' +
+    '<table style="background-color: #8CE; width: 100%; height: 100%;"><tr>' +
+    '<td align="center">' +
+    '<div style="display: table-cell; vertical-align: middle;">' +
+    '<div style="">' + msg + '</div>' +
+    '</div>' +
+    '</td></tr></table>';
+};
+
+/**
+ * Mesasge for getting a webgl browser
+ * @type {string}
+ */
+var GET_A_WEBGL_BROWSER = '' +
+  'This page requires a browser that supports WebGL.<br/>' +
+  '<a href="http://get.webgl.org">Click here to upgrade your browser.</a>';
+
+/**
+ * Mesasge for need better hardware
+ * @type {string}
+ */
+var OTHER_PROBLEM = '' +
+  "It doesn't appear your computer can support WebGL.<br/>" +
+  '<a href="http://get.webgl.org/troubleshooting/">Click here for more information.</a>';
+
+/**
+ * Creates a webgl context. If creation fails it will
+ * change the contents of the container of the <canvas>
+ * tag to an error message with the correct links for WebGL.
+ * @param {Element} canvas. The canvas element to create a
+ *     context from.
+ * @param {WebGLContextCreationAttirbutes} opt_attribs Any
+ *     creation attributes you want to pass in.
+ * @param {function:(msg)} opt_onError An function to call
+ *     if there is an error during creation.
+ * @return {WebGLRenderingContext} The created context.
+ */
+var setupWebGL = function(canvas, opt_attribs, opt_onError) {
+  function handleCreationError(msg) {
+    var container = canvas.parentNode;
+    if (container) {
+      var str = window.WebGLRenderingContext ?
+           OTHER_PROBLEM :
+           GET_A_WEBGL_BROWSER;
+      if (msg) {
+        str += "<br/><br/>Status: " + msg;
+      }
+      container.innerHTML = makeFailHTML(str);
+    }
+  };
+
+  opt_onError = opt_onError || handleCreationError;
+
+  if (canvas.addEventListener) {
+    canvas.addEventListener("webglcontextcreationerror", function(event) {
+          opt_onError(event.statusMessage);
+        }, false);
+  }
+  var context = create3DContext(canvas, opt_attribs);
+  if (!context) {
+    if (!window.WebGLRenderingContext) {
+      opt_onError("");
+    }
+  }
+  return context;
+};
+
+/**
+ * Creates a webgl context.
+ * @param {!Canvas} canvas The canvas tag to get context
+ *     from. If one is not passed in one will be created.
+ * @return {!WebGLContext} The created context.
+ */
+var create3DContext = function(canvas, opt_attribs) {
+  var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+  var context = null;
+  for (var ii = 0; ii < names.length; ++ii) {
+    try {
+      context = canvas.getContext(names[ii], opt_attribs);
+    } catch(e) {}
+    if (context) {
+      break;
+    }
+  }
+  return context;
+}
+
+return {
+  create3DContext: create3DContext,
+  setupWebGL: setupWebGL
+};
+}();
+
+/**
+ * Provides requestAnimationFrame in a cross browser way.
+ */
+window.requestAnimFrame = (function() {
+  return window.requestAnimationFrame ||
+         window.webkitRequestAnimationFrame ||
+         window.mozRequestAnimationFrame ||
+         window.oRequestAnimationFrame ||
+         window.msRequestAnimationFrame ||
+         function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+           window.setTimeout(callback, 1000/60);
+         };
+})();
+
+
+</script>
+<script>
+
+var gl;
+var canvas;
+var shaderProgram;
+var vertexPositionBuffer;
+
+
+// Create a place to store vertex colors
+var vertexColorBuffer;
+
+var mvMatrix = mat4.create();
+var rotAngle = 0;
+var lastTime = 0;
+
+
+function setMatrixUniforms() {
+    gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+}
+
+
+// function degToRad(degrees) {
+//         return degrees * Math.PI / 180;
+// }
+
+
+function createGLContext(canvas) {
+  var names = ["webgl", "experimental-webgl"];
+  var context = null;
+  for (var i=0; i < names.length; i++) {
+    try {
+      context = canvas.getContext(names[i]);
+    } catch(e) {}
+    if (context) {
+      break;
+    }
+  }
+  if (context) {
+    context.viewportWidth = canvas.width;
+    context.viewportHeight = canvas.height;
+  } else {
+    alert("Failed to create WebGL context!");
+  }
+  return context;
+}
+
+function loadShaderFromDOM(id) {
+  var shaderScript = document.getElementById(id);
+  
+  // If we don't find an element with the specified id
+  // we do an early exit 
+  if (!shaderScript) {
+    return null;
+  }
+  
+  // Loop through the children for the found DOM element and
+  // build up the shader source code as a string
+  var shaderSource = "";
+  var currentChild = shaderScript.firstChild;
+  while (currentChild) {
+    if (currentChild.nodeType == 3) { // 3 corresponds to TEXT_NODE
+      shaderSource += currentChild.textContent;
+    }
+    currentChild = currentChild.nextSibling;
+  }
+ 
+  var shader;
+  if (shaderScript.type == "x-shader/x-fragment") {
+    shader = gl.createShader(gl.FRAGMENT_SHADER);
+  } else if (shaderScript.type == "x-shader/x-vertex") {
+    shader = gl.createShader(gl.VERTEX_SHADER);
+  } else {
+    return null;
+  }
+ 
+  gl.shaderSource(shader, shaderSource);
+  gl.compileShader(shader);
+ 
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    alert(gl.getShaderInfoLog(shader));
+    return null;
+  } 
+  return shader;
+}
+
+function setupShaders() {
+  vertexShader = loadShaderFromDOM("shader-vs");
+  fragmentShader = loadShaderFromDOM("shader-fs");
+  
+  shaderProgram = gl.createProgram();
+  gl.attachShader(shaderProgram, vertexShader);
+  gl.attachShader(shaderProgram, fragmentShader);
+  gl.linkProgram(shaderProgram);
+
+  if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+    alert("Failed to setup shaders");
+  }
+
+  gl.useProgram(shaderProgram);
+  shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+  gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+
+  shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
+  gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
+  shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+  
+}
+
+// The coordinates of all vertices
+// No T-intersections
+var original_triangleVertices = [
+    // TOP 18 vertices
+    // The top bar consists of 6 triangles
+    -0.425, 0.0, 0.0,
+    -0.425, -0.15, 0.0,
+    -0.33, -0.15, 0.0,
+
+    -0.425, 0.0, 0.0,
+    -0.33, -0.15, 0.0,
+    -0.15, -0.15, 0.0,
+
+    -0.425, 0.0, 0.0,
+    -0.15, -0.15, 0.0,
+    0.15, -0.15, 0.0,
+
+    -0.425, 0.0, 0.0,
+    0.15, -0.15, 0.0,
+    0.33, -0.15, 0.0,
+
+    -0.425, 0.0, 0.0,
+    0.33, -0.15, 0.0,
+    0.425, -0.15, 0.0,
+
+    -0.425, 0.0, 0.0,
+    0.425, -0.15, 0.0,
+    0.425, 0.0, 0.0,
+
+    // LEFT 18 vertices
+    // The left side of 'I' consists of 6 triangles
+    -0.33, -0.15, 0.0,
+    -0.33, -0.6, 0.0,
+    -0.15, -0.6, 0.0,
+
+    -0.33, -0.15, 0.0,
+    -0.15, -0.6, 0.0,
+    -0.15, -0.475, 0.0,
+
+    -0.33, -0.15, 0.0,
+    -0.15, -0.475, 0.0,
+    -0.15, -0.275, 0.0,
+
+    -0.33, -0.15, 0.0,
+    -0.15, -0.275, 0.0,
+    -0.15, -0.15, 0.0,
+
+    -0.15, -0.275, 0.0,
+    -0.15, -0.475, 0.0,
+    -0.08, -0.475, 0.0,
+
+    -0.15, -0.275, 0.0,
+    -0.08, -0.475, 0.0,
+    -0.08, -0.275, 0.0,
+
+    // RIGHT 18 vertices
+    // The right side of 'I' consists of 6 triangles
+    0.33, -0.15, 0.0,
+    0.15, -0.6, 0.0,
+    0.33, -0.6, 0.0,
+
+    0.33, -0.15, 0.0,
+    0.15, -0.475, 0.0,
+    0.15, -0.6, 0.0,
+
+    0.33, -0.15, 0.0,
+    0.15, -0.275, 0.0,
+    0.15, -0.475, 0.0,
+
+    0.33, -0.15, 0.0,
+    0.15, -0.15, 0.0,
+    0.15, -0.275, 0.0,
+
+    0.15, -0.275, 0.0,
+    0.08, -0.475, 0.0,
+    0.15, -0.475, 0.0,
+
+    0.15, -0.275, 0.0,
+    0.08, -0.275, 0.0,
+    0.08, -0.475, 0.0,
+
+    // BOTTOM 36 vertices
+    // The bottom stripes consist of 12 triangles
+    -0.27, -0.63, 0.0,
+    -0.33, -0.63, 0.0,
+    -0.33, -0.69, 0.0,
+
+    -0.27, -0.63, 0.0,
+    -0.33, -0.69, 0.0,
+    -0.27, -0.72, 0.0,
+
+    -0.15, -0.63, 0.0,
+    -0.21, -0.63, 0.0,
+    -0.21, -0.75, 0.0,
+
+    -0.15, -0.63, 0.0,
+    -0.21, -0.75, 0.0,
+    -0.15, -0.78, 0.0,
+
+    -0.03, -0.63, 0.0,
+    -0.09, -0.63, 0.0,
+    -0.09, -0.81, 0.0,
+
+    -0.03, -0.63, 0.0,
+    -0.09, -0.81, 0.0,
+    -0.03, -0.84, 0.0,
+
+    0.09, -0.63, 0.0,
+    0.03, -0.63, 0.0,
+    0.03, -0.84, 0.0,
+
+    0.09, -0.63, 0.0,
+    0.03, -0.84, 0.0,
+    0.09, -0.81, 0.0,
+
+    0.21, -0.63, 0.0,
+    0.15, -0.63, 0.0,
+    0.15, -0.78, 0.0,
+
+    0.21, -0.63, 0.0,
+    0.15, -0.78, 0.0,
+    0.21, -0.75, 0.0,
+
+    0.33, -0.63, 0.0,
+    0.27, -0.63, 0.0,
+    0.27, -0.72, 0.0,
+
+    0.33, -0.63, 0.0,
+    0.27, -0.72, 0.0,
+    0.33, -0.69, 0.0,
+];
+
+
+function setupBuffers() {
+  vertexPositionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
+
+  // Load default vertices
+  var triangleVertices = original_triangleVertices.slice();
+    
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triangleVertices), gl.STATIC_DRAW);
+  vertexPositionBuffer.itemSize = 3;
+  vertexPositionBuffer.numberOfItems = 90;
+    
+  vertexColorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
+  var colors = [
+        // ILLINI blue has GRB (0,32,91)
+        // according to: http://identitystandards.illinois.edu/graphicstandardsmanual/generalguidelines/colors.html
+        // Blue is for top part (54 vertices)
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        0.0/255.0, 32.0/255.0, 91.0/255.0, 1.0,
+        // ILLINI orange has RGB (232,119,34)
+        // Orange is for bottom part (36 vertices)
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+        232.0/255.0, 119.0/255.0, 34.0/255.0, 1.0,
+    ];
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+  vertexColorBuffer.itemSize = 4;
+  vertexColorBuffer.numItems = 90;  
+}
+
+function draw() { 
+  gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
+  gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, 
+                         vertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
+  gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, 
+                            vertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+  
+  setMatrixUniforms();
+  gl.drawArrays(gl.TRIANGLES, 0, vertexPositionBuffer.numberOfItems);
+}
+
+// Add a timer so that the animation does not depend on frame rate
+var start_time;
+
+function startup() {
+  canvas = document.getElementById("myGLCanvas");
+  gl = createGLContext(canvas);
+  setupShaders(); 
+  setupBuffers();
+  gl.clearColor(1.0, 1.0, 1.0, 1.0);
+  gl.enable(gl.DEPTH_TEST);
+  start_time = Date.now();
+  tick();
+}
+
+function tick() {
+    requestAnimFrame(tick);
+    draw();
+    animate();
+}
+
+// Update the parameters according to current time.
+function animate(){
+  var timer = Date.now() - start_time; // Calculate current time
+  var cycle_freq = 2*Math.PI/4800; // Frequency of a whole cycle
+  var jump_freq = cycle_freq*4; // Frequency of the jumping effect
+  // Only 3/4 of a cycle do jumping (affine transformation)
+  // The other 1/4 do non-affine transformation.
+  var do_affine = Math.cos(cycle_freq*timer) > 0 || Math.sin(cycle_freq*timer) > 0;
+  // Load default vertices
+  var triangleVertices = original_triangleVertices.slice();
+  
+  if(do_affine){
+    // Create jumping effect with a affine transformation matrix
+    mat4.fromRotationTranslationScaleOrigin(
+      mvMatrix, 
+      quat.create(), // No rotation
+      vec3.fromValues(0.0,0.8*Math.abs(Math.cos(jump_freq*timer)),0.0), // Y-translation
+      vec3.fromValues(1.0+0.4*Math.abs(Math.cos(jump_freq*timer)),0.9+0.5*Math.abs(Math.cos(jump_freq*timer)),1.0), // Scale
+      vec3.fromValues(0.0,0.0,0.0) // Transform-origin at (0,0,0)
+    );
+  }else{
+    // Pause the badge at its top position.
+    mat4.fromRotationTranslationScaleOrigin(
+      mvMatrix, 
+      quat.create(),  // No rotation
+      vec3.fromValues(0.0,0.8,0.0), // Y-translation
+      vec3.fromValues(1.4,1.4,1.0), // Scale 
+      vec3.fromValues(0.0,0.0,0.0) // Transform-origin at (0,0,0)
+    ); 
+
+    // Add non-affine transformation by modifying vertices.
+    // Loop through each stripe
+    for(var i = 0; i < 6; i++){
+      var position = i-2.5;
+      var wave_number = 2*Math.PI/12;
+      // Loop through each vertice in a stripe
+      for(var vertex = 0; vertex < 6; vertex++){
+        // Modify vertice position.
+        var diff = 0.2*Math.cos(jump_freq*timer+wave_number*position);
+        triangleVertices[(54+i*6)*3+vertex*3+1] += diff > 0 ? 0 : diff;
+      }
+    }
+  }
+  
+  // Send new vertice coordinates to buffer. 
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triangleVertices), gl.STATIC_DRAW);
+}
+
+</script> 
+</body>
+
+</html>
