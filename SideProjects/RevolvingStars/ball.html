@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+
+		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+		Remove this if you use the .htaccess -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+		<title>main</title>
+		<meta name="description" content="">
+		<meta name="author" content="Patrick Huang">
+
+		<meta name="viewport" content="width=device-width; initial-scale=1.0">
+
+		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+		<!--<link rel="shortcut icon" href="/favicon.ico">
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
+		
+		<style>
+body {
+	background-color: #000060;
+}
+
+#main {
+
+	position: fixed;
+	top: 0px; left: 0px; bottom: 0px; right: 0px;
+}
+
+.ball {
+	background-color: #ffffff;
+	border: 2px solid #000000;
+	border-radius: 100%;
+	position: fixed;
+	top: 5px;
+	left: 5px;
+	height: 10px;
+	width: 10px;
+}
+
+</style>
+		
+	</head>
+
+	<body onload = "background();">
+		<p id="count">0</p>
+		<div id="main">
+			
+		</div>
+		
+		
+		<script type="text/javascript" >
+//constant
+var G=0.00001; //gravitivity constant (recommended: 0.00001 for -1)
+var mrPower=2; // mass = pow(radius,mrPower)
+var frPower=-1; // force = pow(radius,frPower)
+var interval=15;
+var distanceLimit=3; //prevent large acceleration (recommended: 0.5)
+
+//condition of mouse
+var mouseOnBall = false;
+var mouseDown = false;
+
+//interval of balls
+var blowing;
+
+//general functions
+function randomColor(){
+	return "#" + (Math.round(Math.random()*(Math.pow(2,24))).toString(16));
+};
+
+function calculateDistance(BallA,BallB){
+	var x = BallB.positionX - BallA.positionX;
+	var y = BallB.positionY - BallA.positionY;
+	var d = Math.sqrt(x*x+y*y);
+	if(d<distanceLimit)d = distanceLimit;
+	return {"d": d , "x": x , "y": y};
+}
+
+//events related to "main"
+document.getElementById("main").onmousedown = function(event){
+	event = event ? event : window.event;
+	mouseDown = true;
+	if(mouseOnBall)
+		return false;
+	var newBall = createBall(event);
+};
+document.getElementById("main").onmouseup = function(){
+	mouseDown =false;
+};
+
+
+//Array of all balls(including those deleted)
+var ALLBALL = new Array; //new balls are put into ALLBALL immediately after they are created
+
+//Array of existing balls
+var BALL = new Array; //new balls are put into BALL after they are completely constructed
+
+//the object "ball"
+function ball(left,top) {
+	var newDiv = document.createElement("div");
+	var newBall = document.getElementById("main").appendChild(newDiv);
+	//div style
+	newBall.id = "ball" + ALLBALL.length;
+	newBall.className = "ball";
+	newBall.style.top = top + "px";
+	newBall.style.left = left + "px";
+	newBall.style.backgroundColor = randomColor();
+	//ball properties
+	this.id = ALLBALL.length;
+	this.myDiv = newBall; 
+	this.positionX = left + 5;
+	this.positionY = top + 5;
+	this.nextPositionX = this.positionX;
+	this.nextPositionY = this.positionY;
+	this.velocityX = 0;
+	this.velocityY = 0;
+	this.nextVelocityX = this.velocityX;
+	this.nextVelocityY = this.velocityY;
+	this.radius = 5;
+	this.mass = Math.pow(this.radius,mrPower);
+	//ball events
+	newBall.onmouseover = function(){
+		mouseOnBall = true;
+	};
+	newBall.onmouseout = function(){
+		mouseOnBall = false;
+	};
+	newBall.onclick = function(){
+		var myId = parseInt(this.id.slice(4,this.id.length));
+		deleteBall(ALLBALL[myId]);
+		mouseOnBall = false;
+	};
+	ALLBALL.push(this);
+	blowing = window.setInterval(function(){
+		blowBall(ALLBALL[ALLBALL.length-1]);
+		if(!mouseDown){
+			window.clearInterval(blowing);
+			BALL.push(ALLBALL[ALLBALL.length-1]);
+		}
+	},50);
+	
+	return this;
+};
+
+//events related to "ball"
+function createBall(event){
+	event = event ? event : window.event;
+	var mouseX = event.clientX;
+	var mouseY = event.clientY;
+	var newBall = new ball(mouseX - 5, mouseY - 5);
+document.getElementById("count").innerHTML = ALLBALL.length;
+	return newBall;
+}
+
+function deleteBall(target){
+	document.getElementById("main").removeChild(target.myDiv);
+	BALL.splice(BALL.indexOf(target),1);
+}
+
+function blowBall(target){
+	target.radius += 2;
+	target.mass = Math.pow(target.radius,mrPower);
+	target.myDiv.style.top = (target.positionY - target.radius) + "px";
+	target.myDiv.style.left = (target.positionX - target.radius) + "px";
+	target.myDiv.style.height = (target.radius * 2) + "px";
+	target.myDiv.style.width = (target.radius * 2) + "px";
+}
+
+//events related to animations
+function background(){
+	window.setInterval("calculateNext();moveBall();",interval);
+}
+
+function calculateNext(){
+	for(i in BALL){
+		var accelerateX = 0;
+		var accelerateY = 0;
+		for(j in BALL){
+			if(i!=j){
+				var distance = calculateDistance(BALL[i],BALL[j]);
+				accelerateX += G * BALL[j].mass * distance.x * Math.pow(distance.d,frPower - 1);
+				accelerateY += G * BALL[j].mass * distance.y * Math.pow(distance.d,frPower - 1);
+			}
+		}
+		BALL[i].nextPositionX += BALL[i].velocityX * interval + 0.5 * accelerateX * interval * interval;
+		BALL[i].nextPositionY += BALL[i].velocityY * interval + 0.5 * accelerateY * interval * interval;
+		BALL[i].nextVelocityX += accelerateX * interval;
+		BALL[i].nextVelocityY += accelerateY * interval;
+	}
+}
+
+function moveBall(){
+	for(i in BALL){
+		BALL[i].positionX = BALL[i].nextPositionX;
+		BALL[i].positionY = BALL[i].nextPositionY;
+		BALL[i].velocityX = BALL[i].nextVelocityX;
+		BALL[i].velocityY = BALL[i].nextVelocityY;
+		BALL[i].myDiv.style.left = Math.round(BALL[i].positionX - BALL[i].radius) + "px";
+		BALL[i].myDiv.style.top = Math.round(BALL[i].positionY - BALL[i].radius) + "px";
+	}
+}	 
+</script>
+	</body>
+</html>
