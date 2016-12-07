@@ -8,8 +8,13 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
 		<title>main</title>
-		<meta name="description" content="">
-		<meta name="author" content="Patrick Huang">
+		<meta property="og:title" content="Po-Han Huang's Teapot Globe">
+		<meta property="og:url" content="https://phuang17.github.io/SideProjects/RevolvingStars/ball.html">
+		<meta property="og:image" content="https://phuang17.github.io/img/revolving_stars_preview.gif">
+		<meta property="og:description" content="Gravity model implemented in JavaScript.">
+		<meta name="description" content="Gravity model implemented in JavaScript.">
+		<meta name="keywords" content="Po-Han Huang, JavaScript, University of Illinois at Urbana-Champaign, Revolving Stars, Gravity Model, Visualization, HTML5">
+		<meta name="author" content="Po-Han Huang">
 
 		<meta name="viewport" content="width=device-width; initial-scale=1.0">
 
@@ -23,7 +28,6 @@ body {
 }
 
 #main {
-
 	position: fixed;
 	top: 0px; left: 0px; bottom: 0px; right: 0px;
 }
@@ -45,9 +49,21 @@ body {
 
 	<body onload = "background();">
 		<p id="count">0</p>
+		 
+		<div id="instructions" onclick="document.getElementById('instructions').style.display = 'none';" style="position: absolute; width: 600px; height: 200px; background-color: #0CF; z-index: 200; display: block;cursor: pointer; padding: 10px">
+			<h4>Instructions:</h4>
+			<ul>
+				<li>Click anywhere to create stars.</li>
+				<li>The longer the mouse is pressed, the larger and the heavier the star will be.</li>
+				<li>Click on a star to eliminate it.</li>
+				<li>Click on this box to close instructions.</li>
+				<li>Have fun!</li>
+			</ul>
+		</div>
 		<div id="main">
 			
 		</div>
+
 		
 		
 		<script type="text/javascript" >
