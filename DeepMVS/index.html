@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>DeepMVS: Learning Multi-View Stereopsis</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+	<meta property="og:title" content="DeepMVS: Learning Multi-View Stereopsis">
+	<meta property="og:url" content="https://phuang17.github.io/DeepMVS/">
+	<meta property="og:image" content="https://phuang17.github.io/img/profile.png">
+	<meta property="og:description" content="">
+	<meta name="description" content="">
+	<meta name="keywords" content="DeepMVS, Po-Han Huang, Jia-Bin Huang, Johannes Kopf, Kevin Matzen, Narendra Ahuja, Deep Learning, Multi-View Stereo, Learning Multi-View Stereopsis, Computer Vision">
+	<meta name="author" content="Po-Han Huang">
+	<!-- jQuery -->
+	<script
+		src="https://code.jquery.com/jquery-3.1.0.min.js"
+		integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
+		crossorigin="anonymous"></script>
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 text-center">
+				<br>
+				<h1>DeepMVS: Learning Multi-View Stereopsis</h1>
+				<br>
+				<h4><a href="https://phuang17.github.io/">Po-Han&nbsp;Huang</a><sup>1</sup> &emsp; <a href="http://www.kmatzen.com/">Kevin&nbsp;Matzen</a><sup>2</sup> &emsp; <a href="http://johanneskopf.de/">Johannes&nbsp;Kopf</a><sup>2</sup> &emsp; <a href="http://vision.ai.illinois.edu/ahuja.html">Narendra&nbsp;Ahuja</a><sup>1</sup> &emsp; <a href="https://filebox.ece.vt.edu/~jbhuang/">Jia-Bin&nbsp;Huang</a><sup>3</sup></h4>
+			</div>
+			<div class="col-xs-12 text-center">
+				<h4><sup>1</sup>University&nbsp;of&nbsp;Illinois, Urbana&nbsp;Champaign &emsp; <sup>2</sup>Facebook &emsp; <sup>3</sup>Virginia&nbsp;Tech</h4>
+			</div>
+		</div>
+		<div class="row center-block">
+			<div class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-1 col-lg-3 col-lg-offset-0 teaser-img">
+				<img class="img-responsive" src="img/teaser_0016.png">
+			</div>
+			<div class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-0 col-lg-3 col-lg-offset-0 teaser-img">
+				<img class="img-responsive" src="img/teaser_0014.png">
+			</div>
+			<div class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-1 col-lg-3 col-lg-offset-0 teaser-img">
+				<img class="img-responsive" src="img/teaser_0045.png">
+			</div>
+			<div class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-0 col-lg-3 col-lg-offset-0 teaser-img">
+				<img class="img-responsive" src="img/teaser_0064.png">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 text-left">
+				<h3>Abstract</h3>
+				<p >We present DeepMVS, a deep convolutional neural network (ConvNet) for multi-view stereo reconstruction. Taking an arbitrary number of posed images as input, we first produce a set of plane-sweep volumes and use the proposed DeepMVS network to predict high-quality disparity maps. The key contributions that enable these results are (1) supervised training on a photorealistic synthetic dataset, (2) an effective method for aggregating information across a set of unordered images, and (3) integrating multi-layer feature activations from the pre-trained VGG-19 network. We validate the efficacy of DeepMVS using the ETH3D Benchmark. Our results show that DeepMVS compares favorably against state-of-the-art conventional MVS algorithms and other CNN based methods, particularly for near-textureless regions and thin structures. </p>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-xs-12 text-left">
+				<div class="alert alert-info" role="alert"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> <strong>More results are coming soon!</strong></div>
+			</div>
+		</div>
+	</div>
+
+	
+	
+	<style type="text/css">
+body {
+	/*background-color: #fffcfa;*/
+	/*font-family: "Calibri", "Helvetica", "Arial", sans-serif;*/
+	/*font-size: 16px;
+	line-height: 22px;
+	letter-spacing: 0.5px;*/
+}
+
+body > .container {
+	/*background-color: #fffaf5;*/
+}
+
+ul > ul {
+	/*margin-top: 10px;*/
+}
+
+#profile_image {
+	width: 80%;
+	vertical-align: middle;
+}
+
+.indent {
+	text-indent: 2em;
+}
+
+.panel-heading {
+	font-size: 20px;
+}
+
+.teaser-img {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+	</style>
+</body>
+</html>
