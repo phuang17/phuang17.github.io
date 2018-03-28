@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>MVS-Synth Dataset</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+	<meta property="og:title" content="MVS-Synth Dataset">
+	<meta property="og:url" content="https://phuang17.github.io/DeepMVS/mvs-synth.html">
+	<meta property="og:image" content="https://phuang17.github.io/DeepMVS/img/GTAV_overview.png">
+	<meta property="og:description" content="MVS-Synth Dataset is a photo-realistic synthetic dataset prepared for learning-based Multi-View Stereo algorithms. It consists of 120 sequences, each with 100 frames of urban scenes captured in the video game Grand Theft Auto V. The RGB image, the ground truth depth map, and the camera parameters of each frame are provided.">
+	<meta name="description" content="MVS-Synth Dataset is a photo-realistic synthetic dataset prepared for learning-based Multi-View Stereo algorithms. It consists of 120 sequences, each with 100 frames of urban scenes captured in the video game Grand Theft Auto V. The RGB image, the ground truth depth map, and the camera parameters of each frame are provided.">
+	<meta name="keywords" content="DeepMVS, Po-Han Huang, Jia-Bin Huang, Johannes Kopf, Kevin Matzen, Narendra Ahuja, Deep Learning, Multi-View Stereo, Learning Multi-View Stereopsis, Computer Vision, MVS-Synth">
+	<meta name="author" content="Po-Han Huang">
+	<!-- jQuery -->
+	<script
+		src="https://code.jquery.com/jquery-3.1.0.min.js"
+		integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
+		crossorigin="anonymous"></script>
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 text-center">
+				<br>
+				<h1>MVS-Synth Dataset</h1>
+			</div>
+			<div class="col-xs-12 text-left">
+				<a href="index.html">
+					<button type="button" class="btn btn-link">
+						<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Back to DeepMVS Project Page
+					</button>
+				</a>
+				<br>
+			</div>
+			<div class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-1 col-lg-3 col-lg-offset-0 teaser-img">
+				<img class="img-responsive" src="img/GTA_0000.gif">
+			</div>
+			<div class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-0 col-lg-3 col-lg-offset-0 teaser-img">
+				<img class="img-responsive" src="img/GTA_0001.gif">
+			</div>
+			<div class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-1 col-lg-3 col-lg-offset-0 teaser-img">
+				<img class="img-responsive" src="img/GTA_0002.gif">
+			</div>
+			<div class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-0 col-lg-3 col-lg-offset-0 teaser-img">
+				<img class="img-responsive" src="img/GTA_0003.gif">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 text-left">
+				<h3>Introduction</h3>
+				<p><strong>MVS-Synth Dataset</strong> is a photo-realistic synthetic dataset prepared for learning-based Multi-View Stereo algorithms. It consists of 120 sequences, each with 100 frames of urban scenes captured in the video game <a href="https://www.rockstargames.com/V" target="_blank"><em>Grand Theft Auto V</em></a>.<sup class="text-info" id="footnote" data-toggle="popover" data-placement="right" data-content="This academic article may contain images and/or data from sources that are not affiliated with the article submitter.  Inclusion should not be construed as approval, endorsement or sponsorship of the submitter, article or its content by any such party."><strong>[note]</strong></sup> The RGB image, the ground truth depth map, and the camera parameters of each frame are provided.</p>
+				<p>Compared to other synthetic datasets, MVS-Synth Dataset is more realistic in terms of context and shading, and compared to real-world datasets, MVS-Synth provides complete ground truth disparities which cover regions such as the sky, reflective surfaces, and thin structures, whose ground truths are usually missing in real-world datasets.</p>
+			</div>
+			<div class="col-xs-12 text-left">
+				<h3>Data</h3>
+				<p>Three image resolutions are provided. <span class="text-danger">The data is for research and educational use only.</span>
+				</p>
+				<a href="https://filebox.ece.vt.edu/~jbhuang/project/deepmvs/mvs-syn/GTAV_1080.tar.gz">
+					<button type="button" class="btn btn-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> 1920px &times; 1080px (34GB)</button>
+				</a>
+				<a href="https://filebox.ece.vt.edu/~jbhuang/project/deepmvs/mvs-syn/GTAV_720.tar.gz">
+					<button type="button" class="btn btn-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> 1280px &times; 720px (16GB)</button>
+				</a>
+				<a href="https://filebox.ece.vt.edu/~jbhuang/project/deepmvs/mvs-syn/GTAV_540.tar.gz">
+					<button type="button" class="btn btn-info"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> 960px &times; 540px (9GB)</button>
+				</a>
+			</div>
+			<div class="col-xs-12 text-left">
+				<h3>Format</h3>
+				<p>The depth maps are stored in EXR format with half-precision floating-point numbers. The zero-disparity pixels (such as sky) are stored as <code>inf</code>. There are no invalid or unavailable depths. Take the reciprocal of depth maps to convert them to disparity maps used in our paper.</p>
+				<p>The camera parameters are stored in JSON format. Each JSON file contains an object with the following attributes:
+					<ul>
+						<li><code>extrinsic</code>: A 4&times;4 nested list representing the world-to-camera extrinsic matrix.</li>
+						<li><code>c_x</code> and <code>c_y</code>: The principal point.</li>
+						<li><code>f_x</code> and <code>f_y</code>: The focal lengths.</li>
+					</ul>
+				</p>
+				<p>The file structure is shown below:</p>
+<pre>
++-- num_images.json
++-- 0000
+|   +-- depths
+|   |   +-- 0000.exr
+|   |   +-- ...
+|   |   +-- 0099.exr
+|   +-- images
+|   |   +-- 0000.png
+|   |   +-- ...
+|   |   +-- 0099.png
+|   +-- poses
+|       +-- 0000.json
+|       +-- ...
+|       +-- 0099.json
++-- 0001
+|   +...
+...
++-- 0119
+    +...
+</pre>
+			</div>
+			<div class="col-xs-12 text-left">
+				<h3>BibTeX</h3>
+				<p>If you use this dataset in your work, please cite:</p>
+<pre>
+    @inproceedings{DeepMVS,
+      author       = "Huang, Po-Han and Matzen, Kevin and Kopf, Johannes and Ahuja, Narendra and Huang, Jia-Bin",
+      title        = "DeepMVS: Learning Multi-View Stereopsis",
+      booktitle    = "IEEE Conference on Computer Vision and Pattern Recognition (CVPR)",
+      year         = "2018"
+    }
+</pre>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	$(function () {
+	  $('[data-toggle="popover"]').popover()
+	});
+	</script>
+	
+	<style type="text/css">
+.container {
+	background-color: #FBFBFC;
+}
+
+.teaser-img {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#footnote {
+	cursor: pointer;
+}
+	</style>
+</body>
+</html>
