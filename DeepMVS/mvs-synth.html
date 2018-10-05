@@ -73,7 +73,7 @@
 				<p>The depth maps are stored in EXR format with half-precision floating-point numbers. The zero-disparity pixels (such as sky) are stored as <code>inf</code>. There are no invalid or unavailable depths. Take the reciprocal of depth maps to convert them to disparity maps used in our paper.</p>
 				<p>The camera parameters are stored in JSON format. Each JSON file contains an object with the following attributes:
 					<ul>
-						<li><code>extrinsic</code>: A 4&times;4 nested list representing the world-to-camera extrinsic matrix.</li>
+						<li><code>extrinsic</code>: A 4&times;4 nested list representing the world-to-camera extrinsic matrix. <span class="text-danger">Note that the rotation matrices have determinants <strong>-1</strong> instead of 1. Further processing may be necessary in some applications.</span></li>
 						<li><code>c_x</code> and <code>c_y</code>: The principal point.</li>
 						<li><code>f_x</code> and <code>f_y</code>: The focal lengths.</li>
 					</ul>
